@@ -5,9 +5,9 @@ FROM node:18-alpine
 WORKDIR /app-frontend/
 
 # copy needed files into the working directory
-COPY public/ /frontend/public
-COPY src/ /frontend/src
-COPY package.json /frontend/
+COPY public/ /app-frontend/public
+COPY src/ /app-frontend/src
+COPY package.json /app-frontend/
 
 # install npm and un
 RUN npm install
