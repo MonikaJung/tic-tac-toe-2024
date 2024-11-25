@@ -1,0 +1,96 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: black;
+}
+
+h1 {
+  color: rgb(7, 187, 190);
+  font-size: 3em;
+}
+
+h2 {
+  color: rgb(226, 224, 93);
+  font-size: 2em;
+  margin: 0 0 10px 0;
+}
+
+button {
+  font-size: 1.5em;
+  background-color: rgb(226, 224, 93);
+  border-radius: 10px;
+  border: 3px solid rgb(172, 170, 56);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgb(175, 173, 64);
+  border: 3px solid rgb(121, 120, 29);
+}
+
+button:active {
+  background-color: rgb(92, 91, 31);
+  border: 3px solid rgb(172, 170, 55);
+  color: wheat;
+}
+
+label {
+  color: rgb(56, 183, 185);
+  font-size: 2em;
+  margin: 0 0 10px 0;
+}
+
+input {
+  all: unset;
+  background-color: rgb(42, 42, 42);
+  font-size: 1.5em;
+  color: rgb(7, 187, 190);
+  border-radius: 10px;
+  border: none;
+  margin: 0px 10px;
+}
+
+input:focus,
+input:active {
+  background-color: rgb(42, 42, 42);
+  font-size: 1.5em;
+  color: rgb(7, 187, 190);
+  border-radius: 10px;
+  border: none;
+  border: 1px solid rgb(2, 93, 95);
+}
+
+#error-popup {
+  width: 100%;
+  text-align: center;
+  background-color: rgb(0, 28, 29);
+  padding: 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  color: rgb(226, 142, 93);
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  margin-top: 0px;
+  border: solid 1px rgb(226, 142, 93);
+}
+
+#error-popup button {
+  font-size: 1.5em;
+  background-color: rgb(226, 224, 93);
+  border-radius: 10px;
+  border: 3px solid rgb(172, 170, 56);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#error-popup button:hover {
+  background-color: rgb(175, 173, 64);
+  border: 3px solid rgb(121, 120, 29);
+}
+
+#error-popup button:active {
+  background-color: rgb(92, 91, 31);
+  border: 3px solid rgb(172, 170, 55);
+  color: wheat;
+}

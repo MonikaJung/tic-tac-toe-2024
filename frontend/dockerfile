@@ -1,0 +1,16 @@
+# use Node.js
+FROM node:18-alpine
+
+# set working directory
+WORKDIR /app-frontend/
+
+# copy needed files into the working directory
+COPY public/ /frontend/public
+COPY src/ /frontend/src
+COPY package.json /frontend/
+
+# install npm and un
+RUN npm install
+
+# command that will be executed after the container's start
+CMD ["npm", "start"]

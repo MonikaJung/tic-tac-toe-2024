@@ -1,0 +1,16 @@
+#game-over-area {
+  text-align: center;
+  border-radius: 10px;
+  border: 6px solid rgb(0, 118, 120);
+  background-color: rgb(0, 28, 29);
+  padding: 20px 10px;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.visable {
+  display: block;
+}
