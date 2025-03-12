@@ -11,9 +11,3 @@ To build containers with frontend and bakend run:
 To stop and remove the containers run:
 
 ### `docker-compose down`
-
-Or mnually (both containers or just one):
-
-### `docker stop frontend backend`
-### `docker rm frontend backend`
-
