@@ -1,41 +1,38 @@
-# Okreslenie dostawcy i regionu, gdzie beda tworzone zasoby
+# Dostawca i region, gdzie beda tworzone zasoby
 provider "aws" {
   region = "us-east-1"
 }
 
-# Tworzenie prywatnej sieci (Virtual Private Cloud) w chmurze AWS
+# Prywatna siec (Virtual Private Cloud) w chmurze AWS
 resource "aws_vpc" "tic_tac_toe_vpc" {
   cidr_block = "10.0.0.0/16"  # Zakres adresow IP dla VPC
   enable_dns_support = true  # Wlacza obsluge DNS w VPC
   enable_dns_hostnames = true  # Wlacza mozliwosc przypisania nazw DNS do instancji w VPC
-
   tags = {
     Name = "tic-tac-toe-vpc"
   }
 }
 
-# Tworzenie Podsieci w VPC, gdzie beda uruchamiane instancje
+# Podsiec VPC, w ktorej beda uruchamiane instancje
 resource "aws_subnet" "tic_tac_toe_subnet" {
   vpc_id                  = aws_vpc.tic_tac_toe_vpc.id  # Przypisanie podsieci do odpowiedniego VPC
   cidr_block              = "10.0.1.0/24"  # Zakres IP dla tej podsieci
   availability_zone       = "us-east-1a"  # Strefa dostepnosci
   map_public_ip_on_launch = true  # Umozliwia przypisanie publicznego IP dla instancji w tej podsieci
-
   tags = {
     Name = "tic-tac-toe-subnet"
   }
 }
 
-# Tworzenie bramy internetowej umozliwiajacej dostep do Internetu
+# Brama internetowa umozliwiajaca dostep do Internetu
 resource "aws_internet_gateway" "tic_tac_toe_igw" {
   vpc_id = aws_vpc.tic_tac_toe_vpc.id  # Przypisanie Internet Gateway do naszej VPC
-
   tags = {
     Name = "tic-tac-toe-igw"
   }
 }
 
-# Tworzenie tabeli trasowania (routingu), ktora kontroluje, jak pakiety sa przesylane w VPC
+# Tabela trasowania (routingu), ktora kontroluje jak pakiety sa przesylane w VPC
 resource "aws_route_table" "tic_tac_toe_route_table" {
   vpc_id = aws_vpc.tic_tac_toe_vpc.id
 
@@ -44,7 +41,6 @@ resource "aws_route_table" "tic_tac_toe_route_table" {
     cidr_block = "0.0.0.0/0"  # Ruch do wszystkich adresów
     gateway_id = aws_internet_gateway.tic_tac_toe_igw.id  # Przesylanie ruchu przez Internet Gateway
   }
-
   tags = {
     Name = "tic-tac-toe-route-table"
   }
@@ -91,9 +87,13 @@ resource "aws_security_group" "tic_tac_toe_sg" {
     protocol    = "-1"  # Pozwolenie na wszelkie protokoly
     cidr_blocks = ["0.0.0.0/0"]  # Pozwolenie na dostep do wszystkich adresow
   }
+
+  tags = {
+    Name = "tic-tac-toe-sg"
+  }
 }
 
-# Tworzenie instancji EC2 (komputer w chmurze AWS), ktora bedzie uruchamiala aplikacje
+# Instancja EC2 (komputer w chmurze AWS), ktora bedzie uruchamiala aplikacje
 resource "aws_instance" "tic_tac_toe_instance" {
   ami                          = "ami-0c02fb55956c7d316"  # Identyfikator AMI
   instance_type                = "t2.micro"              # Typ instancji
