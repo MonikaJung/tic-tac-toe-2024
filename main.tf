@@ -87,6 +87,13 @@ resource "aws_security_group" "tic_tac_toe_sg" {
   }
 
   ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Pozwolenie na dostep z kazdego adresu IP (np. backend)
+  }
+
+  ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -127,12 +134,30 @@ resource "aws_instance" "tic_tac_toe_instance" {
               sudo chmod +x /usr/local/bin/docker-compose
               sudo service docker start
               sudo systemctl enable docker
+              sleep 5  # Opóźnienie na uruchomienie usługi Docker
               sudo yum install -y git
+              sleep 5  # Czas na instalację GIT
               git clone https://github.com/MonikaJung/tic-tac-toe-2024.git
               cd tic-tac-toe-2024
-              sleep 10
-              docker-compose --version || { echo "docker-compose installation failed"; exit 1; }
-              sudo docker-compose up --build -d
+              sleep 10  # Czas na pobranie repozytorium
+
+              # Pętla sprawdzająca, czy docker-compose jest dostępny
+              MAX_RETRIES=5
+              COUNTER=0
+              while ! docker-compose --version > /dev/null 2>&1; do
+                if [ $COUNTER -ge $MAX_RETRIES ]; then
+                  echo "Instalacja docker-compose po $MAX_RETRIES próbach nie powiodła się."
+                  exit 1
+                fi
+                sleep 10  # Czekaj 10 sekund, aby spróbować ponownie
+                COUNTER=$((COUNTER+1))
+                echo "Dodatkowy czas na instalację docker-compose..."
+              done
+              
+              sudo usermod -aG docker $(whoami)
+              newgrp docker
+              docker-compose up --build -d
+
               echo "Aplikacja została uruchomiona za pomocą Docker Compose."
             EOF
 
