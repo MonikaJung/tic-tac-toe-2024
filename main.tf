@@ -86,6 +86,13 @@ resource "aws_security_group" "tic_tac_toe_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Pozwolenie na dostep z kazdego adresu IP (np. backend)
   }
 
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Reguly dla wychodzacego ruchu (dozwolony dostep do Internetu)
   egress {
     from_port   = 0
@@ -123,6 +130,8 @@ resource "aws_instance" "tic_tac_toe_instance" {
               sudo yum install -y git
               git clone https://github.com/MonikaJung/tic-tac-toe-2024.git
               cd tic-tac-toe-2024
+              sleep 10
+              docker-compose --version || { echo "docker-compose installation failed"; exit 1; }
               sudo docker-compose up --build -d
               echo "Aplikacja została uruchomiona za pomocą Docker Compose."
             EOF
