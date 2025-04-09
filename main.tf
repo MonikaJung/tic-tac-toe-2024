@@ -1,3 +1,9 @@
+# Klucz SSH
+resource "aws_key_pair" "tic_tac_toe_key" {
+  key_name   = "tic-tac-toe-key"
+  public_key = file("tic-tac-toe-key.pub")
+}
+
 # Dostawca i region, gdzie beda tworzone zasoby
 provider "aws" {
   region = "us-east-1"
@@ -100,6 +106,7 @@ resource "aws_instance" "tic_tac_toe_instance" {
   vpc_security_group_ids       = [aws_security_group.tic_tac_toe_sg.id]  # Użyj ID grupy zabezpieczeń
   associate_public_ip_address  = true                   # Przydzielenie publicznego IP
   subnet_id                    = aws_subnet.tic_tac_toe_subnet.id        # Przypisanie do podsieci
+  key_name 					   = aws_key_pair.tic_tac_toe_key.key_name
 
   tags = {
     Name = "TicTacToeAppInstance"
