@@ -49,6 +49,7 @@ function App() {
           onBackendError={handleBackendError}
           usernameX={usernameX}
           usernameO={usernameO}
+          backendAddress={"backend"} // on EC2 "backend", locally "localhost"
         />
       )}
     </div>
