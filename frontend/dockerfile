@@ -1,16 +1,12 @@
-# use Node.js
-FROM node:18-alpine
-
-# set working directory
-WORKDIR /app-frontend/
-
-# copy needed files into the working directory
-COPY public/ /app-frontend/public
-COPY src/ /app-frontend/src
-COPY package.json /app-frontend/
-
-# install npm and un
+# Build app
+FROM node:18 AS build
+WORKDIR /app
+COPY . .
 RUN npm install
+RUN npm run build
 
-# command that will be executed after the container's start
-CMD ["npm", "start"]
+# Create HTTP server
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
