@@ -10,4 +10,4 @@ cd tic-tac-toe-2024/frontend
 echo "REACT_APP_BACKEND_URL=http://${backend_ip}:8080" > .env
 
 docker build -t frontend-app .
-docker run -d -p 8000:3000 frontend-app
+sudo docker run -d -p 8000:80 frontend-app
