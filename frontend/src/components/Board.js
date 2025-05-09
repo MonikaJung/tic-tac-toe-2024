@@ -4,7 +4,7 @@ import GameOver from "./GameOver";
 import TurnTilte from "./TurnTitle";
 import "./Board.css";
 
-function Board({ onBackendError, usernameX, usernameO, backendAddress }) {
+function Board({ onBackendError, usernameX, usernameO, backendIP }) {
   const [tiles, setTiles] = useState(Array(9).fill(""));
   const [turn, setTurn] = useState("X");
   const [isGameOver, setGameOver] = useState(false);
@@ -28,7 +28,7 @@ function Board({ onBackendError, usernameX, usernameO, backendAddress }) {
   }
 
   const checkWinner = (newTiles) => {
-    fetch(`http://${backendAddress}/tic-tac-toe/`, {
+    fetch(`http://${backendIP}:8080/tic-tac-toe/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
