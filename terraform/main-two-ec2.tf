@@ -53,30 +53,55 @@ resource "aws_route_table_association" "tic_tac_toe_rta" {
   route_table_id = aws_route_table.tic_tac_toe_rt.id
 }
 
-resource "aws_security_group" "tic_tac_toe_sg" {
-  name        = "TicTacToeSG"
-  description = "Allow SSH, HTTP, and custom app ports"
+resource "aws_security_group" "frontend_sg" {
+  name        = "FrontendSG"
+  description = "Allow SSH and public HTTP access to frontend"
   vpc_id      = aws_vpc.tic_tac_toe_vpc.id
 
   ingress {
-    from_port   = 22
+    from_port   = 22  # SSH
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8000  # Public frontend
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # Allow all outbound traffic
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "FrontendSG"
+  }
+}
+
+
+resource "aws_security_group" "backend_sg" {
+  name        = "BackendSG"
+  description = "Allow SSH and allow access from frontend SG only"
+  vpc_id      = aws_vpc.tic_tac_toe_vpc.id
+
+  ingress {
+    from_port   = 22  # SSH (optional, maybe for debugging)
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 8000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 8080  # Backend service
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.frontend_sg.id]  # Only from frontend
   }
 
   egress {
@@ -87,15 +112,16 @@ resource "aws_security_group" "tic_tac_toe_sg" {
   }
 
   tags = {
-    Name = "TicTacToeSG"
+    Name = "BackendSG"
   }
 }
+
 
 resource "aws_instance" "backend_instance" {
   ami                         = "ami-0c02fb55956c7d316"
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.tic_tac_toe_subnet.id
-  vpc_security_group_ids      = [aws_security_group.tic_tac_toe_sg.id]
+  vpc_security_group_ids      = [aws_security_group.backend_sg.id]
   associate_public_ip_address = true
   key_name                    = aws_key_pair.tic_tac_toe_key.key_name
 
@@ -109,7 +135,7 @@ resource "aws_instance" "frontend_instance" {
   ami                         = "ami-0c02fb55956c7d316"
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.tic_tac_toe_subnet.id
-  vpc_security_group_ids      = [aws_security_group.tic_tac_toe_sg.id]
+  vpc_security_group_ids      = [aws_security_group.frontend_sg.id]
   associate_public_ip_address = true
   key_name                    = aws_key_pair.tic_tac_toe_key.key_name
 
