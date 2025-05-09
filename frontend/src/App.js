@@ -49,7 +49,7 @@ function App() {
           onBackendError={handleBackendError}
           usernameX={usernameX}
           usernameO={usernameO}
-          backendAddress={"backend"} // on EC2 "backend", locally "localhost"
+          backendAddress={process.env.REACT_APP_BACKEND_URL} // on EC2 IPv4 of backend, locally "localhost"
         />
       )}
     </div>
