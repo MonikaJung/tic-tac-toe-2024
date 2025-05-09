@@ -28,7 +28,7 @@ function Board({ onBackendError, usernameX, usernameO, backendAddress }) {
   }
 
   const checkWinner = (newTiles) => {
-    fetch(`http://${backendAddress}:8080/tic-tac-toe/`, {
+    fetch(`http://${backendAddress}/tic-tac-toe/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
