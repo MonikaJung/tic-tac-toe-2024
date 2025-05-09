@@ -26,6 +26,11 @@ public class GameStateController {
         winningCombinations.put(new int[]{3, 5, 7}, Strike.DIA2);
     }
 
+    @GetMapping ("/")
+    public static String checkBackendResponse() {
+        return "Backend is working :)";
+    }
+
     @PostMapping("/")
     public static GameStateResponse checkGameState(@RequestBody GameStateRequest request) {
         boolean isBoardFull = isBoardFull(request.getBoardState());
