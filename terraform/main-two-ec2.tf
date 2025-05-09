@@ -99,22 +99,10 @@ resource "aws_instance" "backend_instance" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.tic_tac_toe_key.key_name
 
+  user_data = templatefile("backend-userdata.sh.tpl", {})
   tags = {
     Name = "TicTacToe-Backend"
   }
-
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo yum install -y docker git
-              sudo service docker start
-              sudo systemctl enable docker
-
-              git clone https://github.com/MonikaJung/tic-tac-toe-2024.git
-              cd tic-tac-toe-2024/backend
-              docker build -t backend-app .
-              docker run -d -p 8080:8080 backend-app
-            EOF
 }
 
 resource "aws_instance" "frontend_instance" {
@@ -132,7 +120,10 @@ resource "aws_instance" "frontend_instance" {
   user_data = templatefile("frontend-userdata.sh.tpl", {
     backend_ip = aws_instance.backend_instance.public_ip
   })
-}
+
+  tags = {
+    Name = "TicTacToe-Frontend"
+  }
 
 output "backend_public_ip" {
   value = aws_instance.backend_instance.public_ip
@@ -140,4 +131,8 @@ output "backend_public_ip" {
 
 output "frontend_public_ip" {
   value = aws_instance.frontend_instance.public_ip
+}
+
+output "frontend_url" {
+  value = "http://${aws_instance.frontend_instance.public_ip}:3000"
 }
