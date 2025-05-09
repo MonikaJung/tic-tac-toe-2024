@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_key_pair" "tic_tac_toe_key" {
   key_name   = "tic-tac-toe-key"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("tic-tac-toe-key.pub")
 }
 
 resource "aws_vpc" "tic_tac_toe_vpc" {
@@ -73,7 +73,7 @@ resource "aws_security_group" "tic_tac_toe_sg" {
   }
 
   ingress {
-    from_port   = 8000
+    from_port   = 80
     to_port     = 8000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
@@ -113,10 +113,6 @@ resource "aws_instance" "frontend_instance" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.tic_tac_toe_key.key_name
 
-  tags = {
-    Name = "TicTacToe-Frontend"
-  }
-
   user_data = templatefile("frontend-userdata.sh.tpl", {
     backend_ip = aws_instance.backend_instance.public_ip
   })
@@ -124,6 +120,7 @@ resource "aws_instance" "frontend_instance" {
   tags = {
     Name = "TicTacToe-Frontend"
   }
+}
 
 output "backend_public_ip" {
   value = aws_instance.backend_instance.public_ip
@@ -134,5 +131,5 @@ output "frontend_public_ip" {
 }
 
 output "frontend_url" {
-  value = "http://${aws_instance.frontend_instance.public_ip}:3000"
+  value = "http://${aws_instance.frontend_instance.public_ip}:8000"
 }
