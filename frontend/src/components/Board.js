@@ -28,6 +28,7 @@ function Board({ onBackendError, usernameX, usernameO, backendIP }) {
   }
 
   const checkWinner = (newTiles) => {
+    console.log(`Fetching adderss "http://${process.env.REACT_APP_BACKEND_IP}:8080/tic-tac-toe/"...`)
     fetch(`http://${backendIP}:8080/tic-tac-toe/`, {
       method: "POST",
       headers: {
@@ -39,6 +40,7 @@ function Board({ onBackendError, usernameX, usernameO, backendIP }) {
       }),
     })
       .then((response) => {
+        console.log(`Fetch response: "${response.json()}`)
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -54,6 +56,7 @@ function Board({ onBackendError, usernameX, usernameO, backendIP }) {
             setWinner("");
           }
         }
+        console.log(`Fetch response was correct`)
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
