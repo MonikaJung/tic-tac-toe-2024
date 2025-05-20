@@ -140,7 +140,7 @@ resource "aws_instance" "frontend_instance" {
   key_name                    = aws_key_pair.tic_tac_toe_key.key_name
 
   user_data = templatefile("frontend-userdata.sh.tpl", {
-    backend_ip = aws_instance.backend_instance.public_ip
+    backend_ip = aws_instance.backend_instance.private_ip
   })
 
   tags = {
@@ -154,6 +154,10 @@ output "backend_public_ip" {
 
 output "frontend_public_ip" {
   value = aws_instance.frontend_instance.public_ip
+}
+
+output "backend_private_ip" {
+  value = aws_instance.backend_instance.private_ip
 }
 
 output "frontend_url" {
